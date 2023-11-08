@@ -21,20 +21,20 @@ uint8_t GNSS_init(uint8_t dynamic_model){
         Serial2.begin(38400, SERIAL_8N1, 16, 17);  // Switch to 38400 baud
         delay(100);
     } else {
-        return 1; // failed to connect
+        return 0; // failed to connect
     }
   }
 
+  myGNSS.setNavigationFrequency(10);
   myGNSS.setDynamicModel((dynModel) dynamic_model);
   myGNSS.setUART1Output(COM_TYPE_UBX); // Set the UART port to output UBX only
   myGNSS.setI2COutput(COM_TYPE_UBX); // Set the I2C port to output UBX only (turn off NMEA noise)
   myGNSS.saveConfiguration(); // Save the current settings to flash and BBR
-
-  return 0;
+  return 1;
 }
 
-uint8_t fixType(){
-  return myGNSS.getFixType();
+uint8_t getSIV(){
+  return myGNSS.getSIV();
 }
 
 uint32_t getTime(){
@@ -42,13 +42,12 @@ uint32_t getTime(){
 }
 
 uint8_t readPosition(float &latitude, float &longitude, float &altitude){
-    latitude = myGNSS.getLatitude()/10000000;
+    latitude = static_cast<float>(myGNSS.getLatitude()) / 10000000.0f;
 
-    longitude = myGNSS.getLongitude()/10000000;
+    longitude = static_cast<float>(myGNSS.getLongitude()) / 10000000.0f;
 
-    altitude = myGNSS.getAltitude()/1000;
+    altitude = static_cast<float>(myGNSS.getAltitude()) / 1000.0f;
 
     return 0;
 }
-
 

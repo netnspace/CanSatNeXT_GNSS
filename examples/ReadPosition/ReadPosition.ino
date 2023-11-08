@@ -8,6 +8,7 @@
 
 // Declare variables to hold latitude, longitude and altitude.
 float latitude = 0, longitude = 0, altitude = 0;
+long GNSSTimer = 0;
 
 void setup()
 {
@@ -15,7 +16,7 @@ void setup()
     Serial.begin(115200);
 
     // Initialize the GNSS module. This sets correct settings etc.
-    if(GNSS_init() == 0){
+    if(!GNSS_init()){
         Serial.println("Module not found");
         return;
     }
@@ -26,28 +27,34 @@ void setup()
 
 void loop()
 {
-    // Check if we have fix.
-    if(fixType()!=0)
+    // Check GPS every 1 seconds - Note: Trying to read the position more than 10 times per second will lead to timing issues
+    if (millis() - GNSSTimer > 1000)
     {
-        // Read new position to the variables
-        readPosition(latitude, longitude, altitude);
+        GNSSTimer = millis(); //Update the timer
 
-        // Read current unix timestamp
-        uint32_t unixTime = getTime();
+        // We want to update the position only when we have good satellite fixes.
+        // getSIV() returns the number of satellites we are receiving from. Let's only update the position
+        // if we have fix to three or more satellites. Less than three can't create a unique position solution.
+        if(getSIV()>=3)
+        {
+          // Read new position to the variables
+          readPosition(latitude, longitude, altitude);
+          // Read current unix timestamp
+          uint32_t unixTime = getTime();
 
-        // Print the readings
-        Serial.print("Latitude: ");
-        Serial.print(latitude);
-        Serial.print(", Longitude: ");
-        Serial.print(longitude);
-        Serial.print(", Altitude: ");
-        Serial.print(altitude);
-        Serial.print(", Unix timestamp:");
-        Serial.println(unixTime);
-    }else{
-        Serial.println("No fix");
+          // Print the readings
+          Serial.print("Latitude: ");
+          Serial.print(latitude, 5); // Print with five decimal places
+          Serial.print(", Longitude: ");
+          Serial.print(longitude, 5);
+          Serial.print(", Altitude: ");
+          Serial.print(altitude);
+          Serial.print(", Unix timestamp:");
+          Serial.print(unixTime);
+          Serial.print(", Millis: ");
+          Serial.println(millis());
+        }else{
+          Serial.println("No fix");
+        }
     }
-
-    // wait for a bit before checking the GNSS again 
-    delay(1000);
 }
