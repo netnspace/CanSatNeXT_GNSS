@@ -36,7 +36,7 @@ Below is the pinout of the CanSat NeXT extension header. The pins are also share
 
 The picture below shows the pins for using the extension header for adding external electronics to the board.
 
-![image description](https://lh3.googleusercontent.com/drive-viewer/AK7aPaDrKPQzTgqN-vACXaDWKlyC1ZMQ5sLF344OpBNhWeb7bTWGEP2YD6sUS9N-EKQ_dZ4yIQjQIWknBSTpaJIGGBf7yUxEAg=s1600)
+![image description](https://lh3.googleusercontent.com/drive-viewer/AK7aPaCUB9VRAFwGYMO-EW117XElR3Waykcdr3ZVzOU-5kBlBRU1rIueelkvuGBM6O7GWhvSDbSqAIs4xzNy0AM9oAVOAwZifg=s1600)
 
 # License
 
