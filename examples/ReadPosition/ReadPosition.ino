@@ -1,7 +1,6 @@
 /*
-    This example shows how to use CanSatNeXT_GNSS library to read latitude, longitude, altitude and time
-    from the GNSS module. Latitude and longitude are in degrees and the altitude is in meters. The timestamp
-    is in unix time, i.e. seconds elapsed since 1st of January 1970 on midnight UTC.
+    This example shows how to use CanSatNeXT_GNSS library to read latitude, longitude and altitude
+    from the GNSS module. Latitude and longitude are in degrees and the altitude is in meters.
 */
 
 #include "CanSatNeXT_GNSS.h"
@@ -32,29 +31,16 @@ void loop()
     {
         GNSSTimer = millis(); //Update the timer
 
-        // We want to update the position only when we have good satellite fixes.
-        // getSIV() returns the number of satellites we are receiving from. Let's only update the position
-        // if we have fix to three or more satellites. Less than three can't create a unique position solution.
-        if(getSIV()>=3)
-        {
-          // Read new position to the variables
-          readPosition(latitude, longitude, altitude);
-          // Read current unix timestamp
-          uint32_t unixTime = getTime();
+        // Read new position to the variables
+        readPosition(latitude, longitude, altitude);
 
-          // Print the readings
-          Serial.print("Latitude: ");
-          Serial.print(latitude, 5); // Print with five decimal places
-          Serial.print(", Longitude: ");
-          Serial.print(longitude, 5);
-          Serial.print(", Altitude: ");
-          Serial.print(altitude);
-          Serial.print(", Unix timestamp:");
-          Serial.print(unixTime);
-          Serial.print(", Millis: ");
-          Serial.println(millis());
-        }else{
-          Serial.println("No fix");
-        }
+        // Print the readings
+        Serial.print("Latitude: ");
+        Serial.print(latitude, 5); // Print with five decimal places
+        Serial.print(", Longitude: ");
+        Serial.print(longitude, 5);
+        Serial.print(", Altitude: ");
+        Serial.print(altitude);
+        
     }
 }
