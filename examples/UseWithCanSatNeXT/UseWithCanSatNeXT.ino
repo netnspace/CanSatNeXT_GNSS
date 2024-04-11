@@ -1,9 +1,10 @@
 /*
-    This example shows how to use CanSatNeXT_GNSS library to read latitude, longitude and altitude
-    from the GNSS module. Latitude and longitude are in degrees and the altitude is in meters.
+    This example shows how to use CanSatNeXT_GNSS library together with CanSat library to transmit the location over the radio.
 */
 
+// Include both libraries
 #include "CanSatNeXT_GNSS.h"
+#include "CanSatNeXT.h"
 
 // Declare variables to hold latitude, longitude and altitude.
 float latitude = 0, longitude = 0, altitude = 0;
@@ -14,6 +15,9 @@ void setup()
     // Initialize serial so we can print information
     Serial.begin(115200);
 
+    // Let's initialize CanSat just like normally
+    CanSatInit(72);
+
     // Initialize the GNSS module. This sets correct settings etc.
     if(!GNSS_init()){
         Serial.println("Module not found");
@@ -23,7 +27,6 @@ void setup()
     // Note on the GNSS initialization: By default the GNSS is told to assume a highly dynamic movement (like a rocket!)
     // This makes the 2D-position significantly less accurate, but allows maintaining fix during acceleration. 
     // If you would preferer more accuracy once landed, initialize the GNSS like this: GNSS_init(DYNAMIC_MODEL_GROUND);
-    
 }
 
 void loop()
@@ -36,13 +39,11 @@ void loop()
         // Read new position to the variables
         readPosition(latitude, longitude, altitude);
 
-        // Print the readings
-        Serial.print("Latitude: ");
-        Serial.print(latitude, 5); // Print with five decimal places
-        Serial.print(", Longitude: ");
-        Serial.print(longitude, 5);
-        Serial.print(", Altitude: ");
-        Serial.println(altitude);
+        // Sprintf can be used to print a formatted string into a character array, which we can then transmit and print. 
+        char msg[64];
+        sprintf(msg, "Latitude: %.5f, Longitude: %.5f, Altitude: %.2f", latitude, longitude, altitude);
+        sendData(msg);
+        Serial.println(msg);
         
     }
 }
